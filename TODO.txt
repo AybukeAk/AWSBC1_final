@@ -1,0 +1,5 @@
+1- VPC olustur
+2- Lambda fonksiyonu bu VPC icinde olustur
+3- Lambda fonksiyonuna IAM role EC2fullaccess policy attach
+4- LAMBDA ile API trigger olustur
+5- index.html ajax url adresini yeni api adresi ile degistir
