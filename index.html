@@ -1,10 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<!-- saved from url=(0046)https://tagproject.s3.amazonaws.com/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>HOTEL BOOKING</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 
-</body>
+<div align="center">
+    <font face="courier" size="6" color="red">
+        FILL THE FOLLOWING FORM WITH THE USER INFORMATION TO MAKE THE HOTEL RESERVATION<br>
+    </font>
+</div>
+<hr width="90%" size="5" noshade="">
+<form  method="post" action="#" id="web_form">
+    <input type="text" name="hotel_name">Hotel name <br>
+    <input type="number" name="lead_time">lead time<br>
+    <input type="number" name="arrival_date_year">arrival date year<br>
+    <input type="text" name="arrival_date_month">arrival date month<br>
+    <input type="number" name="arrival_date_week_number">arrival date week number<br>
+    <input type="number" name="arrival_date_day_of_month">arrival date day of month<br>
+    <input type="number" name="stays_in_weekend_nights">stays in weekend nights<br>
+    <input type="number" name="stays_in_week_nights">stays in week nights<br>
+    <input type="number" name="adults">adults<br>
+    <input type="number" name="children">children<br>
+    <input type="number" name="babies">babies<br>
+    <input type="text" name="meal">meal<br>
+    <input type="text" name="country">country<br>
+    <input type="text" name="market_segment">market segment<br>
+    <input type="text" name="distribution_channel">distribution channel<br>
+    <input type="number" name="is_repeated_guest">is repeated guest<br>
+    <input type="number" name="previous_cancellations">previous cancellations<br>
+    <input type="number" name="previous_bookings_not_canceled">previous bookings not canceled<br>
+    <input type="text" name="reserved_room_type">reserved room type<br>
+    <input type="text" name="assigned_room_type">assigned room type<br>
+    <input type="number" name="booking_changes">booking changes<br>
+    <input type="text" name="deposit_type">deposit type<br>
+    <input type="number" name="agent">agent<br>
+    <input type="number" name="company">company<br>
+    <input type="number" name="days_in_waiting_list">days in waiting list<br>
+    <input type="text" name="customer_type">customer type<br>
+    <input type="number" name="adr">adr<br>
+    <input type="number" name="required_car_parking_spaces">required car parking spaces<br>
+    <input type="number" name="total_of_special_requests">total of special requests<br>
+    <input type="text" name="reservation_status">reservation status<br>
+    <input type="text" name="reservation_status_date">reservation status date<br>
+    <input id="submit_btn" type="submit" value="SUBMIT" align="center">
+    <input type="reset" value="DELETE" align="center">
+</form>
+<hr width="90%" size="5" noshade="">
+<div align="center">
+    <address align="left">
+        <font face="Arial">
+        </font>
+    </address>
+</div>
+
+<div style="display: none" class="ubey-RecordingScreen-count-down ubey-RecordingScreen-count-down-container">
+    <style>
+        .ubey-RecordingScreen-count-down-container {
+            position: fixed;
+            height: 100vh;
+            width: 100vw;
+            top: 0;
+            left: 0;
+            z-index: 9999999999999;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .ubey-RecordingScreen-count-down-content {
+            position: absolute;
+            display: flex;
+            top: 50%;
+            left: 50%;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            height: 15em;
+            width: 15em;
+            transform: translate(-50%, -100%);
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+        }
+
+        #ubey-RecordingScreen-count-count {
+            font-size: 14em;
+            transform: translateY(-2%);
+        }
+    </style>
+    <div class="ubey-RecordingScreen-count-down-content">
+        <span id="ubey-RecordingScreen-count-count"></span>
+    </div>
+</div></body>
+
+
+
+<script>
+  $(document).ready(function(){
+    $("#submit_btn").on('click',function(e){
+      e.preventDefault();
+      console.log('submit clicked')
+     let data =  $('#web_form').serialize();
+      console.log(data);
+
+      //https://2352ddg51k.execute-api.eu-central-1.amazonaws.com/default/hotel
+
+      // $.ajax({url: "https://2352ddg51k.execute-api.eu-central-1.amazonaws.com/default/hotel", success: function(result){
+      //         $("#div1").html(result);
+      //       }});
+
+
+      $.ajax({
+        url: "https://2352ddg51k.execute-api.eu-central-1.amazonaws.com/default/hotel",
+        method: "GET",      // The HTTP method to use for the request
+        dataType: "json",   // The type of data that you're exerciseecting back
+        data: data,
+        error: function() {
+
+          // A function to be called if the request fails.
+        },
+        beforeSend: function() {
+
+          // A function to be called if before the request is made.
+        },
+        success: function(response) {
+          console.log(response);
+
+
+          // A function to be called if the request succeeds.
+        },
+        complete: function(response) {
+
+          // A function to be called when the request finishes
+        }
+      });
+
+
+
+      // $.ajax({url: "demo_test.txt", success: function(result){
+      //     $("#div1").html(result);
+      //   }});
+    });
+  });
+</script>
 </html>
