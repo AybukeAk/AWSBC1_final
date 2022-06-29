@@ -9,7 +9,7 @@ from joblib import dump, load
 import pandas as pd
 clf = load('filename.joblib')
 print(clf)
-df = pd.read_csv(r'C:/Users/Aybüke Hamide AK/Desktop/hotel_bookings.csv')
+df = pd.read_csv(r'./data/hotel_bookings.csv')
 
 
 # encoding
