@@ -153,9 +153,9 @@ def feature_eng(df):
     return df
 
 
-user = pd.DataFrame(user_info,index = [119390])
+user = pd.DataFrame(user_info,index = [len(df)])
 new_df = feature_eng (pd.concat([df,user]))
-user1 = pd.DataFrame(new_df.loc[[119390]])
+user1 = pd.DataFrame(new_df.loc[[len(df)]])
 clf = load('model_1.joblib')
 def result(user1):
     flag = clf.predict(user1)
