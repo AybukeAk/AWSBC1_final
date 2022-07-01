@@ -1,0 +1,44 @@
+import json
+
+def lambda_handler(event, context):
+    # TODO implement
+    query = event.get("queryStringParameters")
+    adr = query.get("adr")
+    hotel = query.get("hotel")
+    lead_time = query.get("lead_time")
+    arrival_date_year = query.get("arrival_date_year") 
+    arrival_date_month = query.get("arrival_date_month" )
+    arrival_date_week_number = query.get("arrival_date_week_number")
+    arrival_date_day_of_month = query.get("arrival_date_day_of_month")
+    stays_in_weekend_nights = query.get("stays_in_weekend_nights")
+    stays_in_week_nights = query.get("stays_in_week_nights")
+    adults = query.get("adults")
+    children = query.get("children")
+    babies = query.get("babies")
+    meal = query.get("meal")
+    country = query.get("country")
+    market_segment = query.get("market_segment")
+    distribution_channel = query.get("distribution_channel")
+    is_repeated_guest = query.get("is_repeated_guest")
+    previous_cancellations = query.get("previous_cancellations")
+    previous_bookings_not_canceled = query.get("previous_bookings_not_canceled")
+    reserved_room_type = query.get("reserved_room_type")
+    assigned_room_type = query.get("assigned_room_type")
+    booking_changes = query.get("booking_changes")
+    deposit_type = query.get("deposit_type")
+    agent = query.get("agent")
+    company = query.get("company")
+    days_in_waiting_list = query.get("days_in_waiting_list")
+    customer_type = query.get("customer_type")
+    adr = query.get("adr")
+    required_car_parking_spaces = query.get("required_car_parking_spaces")
+    total_of_special_requests = query.get("total_of_special_requests")
+    reservation_status = query.get("reservation_status")
+    reservation_status_date = query.get("reservation_status_date")
+
+    
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps(adr , indent=0, sort_keys=True, default=str)
+    }
