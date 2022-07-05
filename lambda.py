@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import numpy as np
 from datetime import timedelta
@@ -5,43 +6,18 @@ import datetime as dt
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import warnings
 from calendar import month_name
+
 warnings.filterwarnings("ignore")
 from joblib import dump, load
 from sklearn.ensemble import RandomForestClassifier
-df = pd.read_csv(r'./data/hotel_bookings.csv')
+from io import BytesIO
+import requests
 
-user_info = {"is_canceled": 0,
-            "hotel": "Resort Hotel",
-            "lead_time" : 342,
-            "arrival_date_year" : 2015,
-            "arrival_date_month" : "July",
-            "arrival_date_week_number" : 27,
-            "arrival_date_day_of_month" : 1,
-            "stays_in_weekend_nights": 0,
-            "stays_in_week_nights": 0,
-            "adults": 2,
-            "children": 0,
-            "babies" : 0,
-            "meal": "BB",
-            "country": "PRT",
-            "market_segment": "Direct",
-            "distribution_channel": "Direct",
-            "is_repeated_guest": 0,
-            "previous_cancellations": 0,
-            "previous_bookings_not_canceled": 0,
-            "reserved_room_type": "A",
-            "assigned_room_type": "C",
-            "booking_changes": 3,
-            "deposit_type": "No Deposit",
-            "agent": " ",
-            "company": " ",
-            "days_in_waiting_list": 0,
-            "customer_type": "Transient",
-            "adr": 0,
-            "required_car_parking_spaces": 0,
-            "total_of_special_requests": 0,
-            "reservation_status": "Check-Out",
-            "reservation_status_date": "2015-07-01"}
+rcsv = requests.get('https://awsbc1test.s3.us-west-1.amazonaws.com/hotel_bookings.csv')
+df = pd.read_csv(BytesIO(rcsv.content))
+
+rclf = requests.get('https://awsbc1test.s3.us-west-1.amazonaws.com/model_1.joblib')
+clf = load(BytesIO(rclf.content))
 
 
 def feature_eng(df):
@@ -112,7 +88,7 @@ def feature_eng(df):
     df['new_is_weekend'] = np.where([(df['stays_in_weekend_nights'] > 0) & (df['stays_in_week_nights'] == 0)], 1, 0)[0]
     df['new_is_weekday'] = np.where([(df['stays_in_weekend_nights'] == 0) & (df['stays_in_week_nights'] > 0)], 1, 0)[0]
     df['new_is_weekend_and_weekdays'] = \
-    np.where([(df['stays_in_weekend_nights'] > 0) & (df['stays_in_week_nights'] > 0)], 1, 0)[0]
+        np.where([(df['stays_in_weekend_nights'] > 0) & (df['stays_in_week_nights'] > 0)], 1, 0)[0]
     df['new_want_parking_space'] = np.where(df['required_car_parking_spaces'] > 0, 1, 0)
     df['new_special_req_status'] = np.where(df['new_special_req_status'] == 'Yes', 1, 0)
     df['new_adr_per_person'] = df['adr'] / (df['adults'] + df['children'])
@@ -152,16 +128,57 @@ def feature_eng(df):
 
     return df
 
-user = pd.DataFrame(user_info,index = [len(df)])
-new_df = feature_eng(pd.concat([df,user]))
+
+user_info = {"is_canceled": 0,
+             "hotel": "Resort Hotel",
+             "lead_time": 342,
+             "arrival_date_year": 2015,
+             "arrival_date_month": "July",
+             "arrival_date_week_number": 27,
+             "arrival_date_day_of_month": 1,
+             "stays_in_weekend_nights": 0,
+             "stays_in_week_nights": 0,
+             "adults": 2,
+             "children": 0,
+             "babies": 0,
+             "meal": "BB",
+             "country": "PRT",
+             "market_segment": "Direct",
+             "distribution_channel": "Direct",
+             "is_repeated_guest": 0,
+             "previous_cancellations": 0,
+             "previous_bookings_not_canceled": 0,
+             "reserved_room_type": "A",
+             "assigned_room_type": "C",
+             "booking_changes": 3,
+             "deposit_type": "No Deposit",
+             "agent": " ",
+             "company": " ",
+             "days_in_waiting_list": 0,
+             "customer_type": "Transient",
+             "adr": 0,
+             "required_car_parking_spaces": 0,
+             "total_of_special_requests": 0,
+             "reservation_status": "Check-Out",
+             "reservation_status_date": "2015-07-01"}
+user = pd.DataFrame(user_info, index=[len(df)])
+new_df = feature_eng(pd.concat([df, user]))
 user1 = pd.DataFrame(new_df.loc[[len(df)]])
-clf = load('model_1.joblib')
+
 
 def result(user1):
     flag = clf.predict(user1)
-    if flag==0:
-        return ("OKAY")
+    if flag == 0:
+        return "OKAY"
     else:
-        return ("CANCELED")
+        return "CANCELED"
 
-print(result(user1))
+
+def lambda_handler(event, context):
+    print(result(user1))
+
+    # TODO implement
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }

@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import numpy as np
 from datetime import timedelta
@@ -9,7 +10,6 @@ warnings.filterwarnings("ignore")
 from joblib import dump, load
 from sklearn.ensemble import RandomForestClassifier
 df = pd.read_csv(r'./data/hotel_bookings.csv')
-
 user_info = {"is_canceled": 0,
             "hotel": "Resort Hotel",
             "lead_time" : 342,
@@ -42,8 +42,6 @@ user_info = {"is_canceled": 0,
             "total_of_special_requests": 0,
             "reservation_status": "Check-Out",
             "reservation_status_date": "2015-07-01"}
-
-
 def feature_eng(df):
     filter = (df.children == 0) & (df.adults == 0) & (df.babies == 0)
     df = df[~filter]
@@ -151,17 +149,21 @@ def feature_eng(df):
     df['country'] = le.fit_transform(df['country'])
 
     return df
-
-user = pd.DataFrame(user_info,index = [len(df)])
-new_df = feature_eng(pd.concat([df,user]))
-user1 = pd.DataFrame(new_df.loc[[len(df)]])
-clf = load('model_1.joblib')
-
-def result(user1):
+def result(user1,clf):
     flag = clf.predict(user1)
     if flag==0:
         return ("OKAY")
     else:
         return ("CANCELED")
+def lambda_handler(event, context):
+    # TODO implement
+    user = pd.DataFrame(user_info, index=[len(df)])
+    new_df = feature_eng(pd.concat([df, user]))
+    user1 = pd.DataFrame(new_df.loc[[len(df)]])
+    clf = load('model_1.joblib')
+    data = result(user1, clf)
+    print(data)
 
-print(result(user1))
+
+
+    return {'statusCode': 200,'headers': {"content-type": "application/json"}, 'body': json.dumps(data, indent=4, sort_keys=True, default=str)}
