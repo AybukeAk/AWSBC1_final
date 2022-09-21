@@ -1,3 +1,4 @@
+
 1- VPC olustur
 2- Lambda fonksiyonu bu VPC icinde olustur
 3- Lambda fonksiyonuna IAM role EC2fullaccess policy attach
